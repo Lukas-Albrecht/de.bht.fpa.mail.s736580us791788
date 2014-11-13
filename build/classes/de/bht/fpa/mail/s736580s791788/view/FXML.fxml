@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bht.fpa.mail.s736580s791788.controller.FXMLController">
+   <children>
+      <MenuBar>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+         <menus>
+            <Menu mnemonicParsing="false" text="Account" />
+            <Menu mnemonicParsing="false" text="File">
+              <items>
+                <MenuItem fx:id="open" mnemonicParsing="false" text="Open" />
+              </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <SplitPane dividerPositions="0.25" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" />
+         </VBox.margin>
+         <items>
+            <TreeView fx:id="tree" prefHeight="200.0" prefWidth="200.0" />
+            <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+              </items>
+            </SplitPane>
+         </items>
+      </SplitPane>
+   </children>
+</VBox>
