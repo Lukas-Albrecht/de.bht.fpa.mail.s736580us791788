@@ -11,7 +11,7 @@
   </resources>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="de.bht.fpa.mail.s736580us791788.jar" size="19274" download="eager" />
+    <jar href="de.bht.fpa.mail.s736580us791788.jar" size="24892" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="de.bht.fpa.mail.s736580us791788" >
     <param name="requiredFXVersion" value="8.0+"/>

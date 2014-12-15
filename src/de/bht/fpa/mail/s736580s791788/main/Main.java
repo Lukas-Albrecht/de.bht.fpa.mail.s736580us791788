@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author peteralbrecht
+ * @author Lukas Albrecht, Peter Albrecht
  */
 public class Main extends Application {    
  

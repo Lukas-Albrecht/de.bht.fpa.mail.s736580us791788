@@ -8,11 +8,11 @@
 
 package de.bht.fpa.mail.s736580s791788.model.applicationLogic;
 
-import de.bht.fpa.mail.s736580s791788.model.Folder;
+import de.bht.fpa.mail.s736580s791788.model.applicationData.Folder;
 import java.io.File;
 import java.io.FileFilter;
 
-public class FileManager implements FolderManagerIF {
+public class FileManager implements FolderManagerIF{
 
     //top Folder of the managed hierarchy
     Folder topFolder;
@@ -34,14 +34,12 @@ public class FileManager implements FolderManagerIF {
      *          directory should be loaded
      */
     @Override
-    public void loadContent(Folder parent) {
-        
+    public void loadContent(Folder parent) { 
         ////if data loaded don't do it again 
         if(parent.getComponents().isEmpty()){         
             File root = new File(parent.getPath());
             for(File child: root.listFiles()){
-                if(child.isDirectory()){
-                    
+                if(child.isDirectory()){  
                     //check if directory is expandable
                     FileFilter filter = (File path) -> path.isDirectory();
                     if(child.listFiles() != null && child.listFiles(filter).length == 0){

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.bht.fpa.mail.s736580s791788.model;
+package de.bht.fpa.mail.s736580s791788.model.applicationData;
 
 import java.io.File;
 import java.util.List;

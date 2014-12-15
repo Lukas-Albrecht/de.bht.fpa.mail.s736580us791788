@@ -1,5 +1,5 @@
 
-package de.bht.fpa.mail.s736580s791788.model;
+package de.bht.fpa.mail.s736580s791788.model.applicationData;
 
 import java.text.DateFormat;
 import java.text.ParseException;

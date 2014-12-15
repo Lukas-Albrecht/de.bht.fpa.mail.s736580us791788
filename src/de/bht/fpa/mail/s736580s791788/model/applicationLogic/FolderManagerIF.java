@@ -6,7 +6,7 @@
  */
 package de.bht.fpa.mail.s736580s791788.model.applicationLogic;
 
-import de.bht.fpa.mail.s736580s791788.model.Folder;
+import de.bht.fpa.mail.s736580s791788.model.applicationData.Folder;
 
 public interface FolderManagerIF {
 

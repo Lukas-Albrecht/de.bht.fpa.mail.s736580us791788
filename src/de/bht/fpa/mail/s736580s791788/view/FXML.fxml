@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -9,7 +10,7 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bht.fpa.mail.s736580s791788.controller.FXMLController">
    <children>
-      <MenuBar>
+      <MenuBar fx:id="menuBar">
          <VBox.margin>
             <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
@@ -17,7 +18,8 @@
             <Menu mnemonicParsing="false" text="Account" />
             <Menu mnemonicParsing="false" text="File">
               <items>
-                <MenuItem fx:id="open" mnemonicParsing="false" text="Open" />
+                <MenuItem mnemonicParsing="false" text="Open" />
+                  <MenuItem mnemonicParsing="false" text="Save" />
               </items>
             </Menu>
          </menus>
@@ -30,8 +32,87 @@
             <TreeView fx:id="tree" prefHeight="200.0" prefWidth="200.0" />
             <SplitPane dividerPositions="0.5" orientation="VERTICAL">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                  <TableView fx:id="table">
+                    <columns>
+                      <TableColumn prefWidth="100.33331298828125" text="Importance" />
+                      <TableColumn fx:id="receivedDate" prefWidth="124.66668701171875" text="Received" />
+                        <TableColumn minWidth="0.0" prefWidth="73.00003051757812" text="Read" />
+                        <TableColumn minWidth="0.0" prefWidth="111.6666259765625" text="Sender" />
+                        <TableColumn minWidth="0.0" prefWidth="110.0" text="Recipients" />
+                        <TableColumn prefWidth="132.0" text="Subject" />
+                    </columns>
+                  </TableView>
+                  <VBox>
+                     <children>
+                        <HBox prefHeight="90.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Sender:">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Subject:">
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Received:">
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Receiver:">
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label fx:id="senderLabel" />
+                                    <Label fx:id="subjectLabel">
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label fx:id="receivedLabel">
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label fx:id="receiverLabel">
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <TextArea fx:id="textArea" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
               </items>
             </SplitPane>
          </items>
