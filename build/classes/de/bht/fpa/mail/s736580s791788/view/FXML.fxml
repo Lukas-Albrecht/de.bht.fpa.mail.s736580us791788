@@ -15,7 +15,12 @@
             <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
          <menus>
-            <Menu mnemonicParsing="false" text="Account" />
+            <Menu mnemonicParsing="false" text="Account">
+               <items>
+                  <Menu fx:id="openAccountMenu" mnemonicParsing="false" text="Open Account" />
+                  <MenuItem mnemonicParsing="false" text="New Account" />
+                  <Menu fx:id="editAccountMenu" mnemonicParsing="false" text="Edit Account" />
+               </items></Menu>
             <Menu mnemonicParsing="false" text="File">
               <items>
                 <MenuItem mnemonicParsing="false" text="Open" />

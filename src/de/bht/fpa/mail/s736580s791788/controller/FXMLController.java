@@ -1,6 +1,7 @@
 
 package de.bht.fpa.mail.s736580s791788.controller;
 
+import de.bht.fpa.mail.s736580s791788.model.applicationData.Account;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,14 +23,19 @@ import de.bht.fpa.mail.s736580s791788.model.applicationData.Email;
 import de.bht.fpa.mail.s736580s791788.model.applicationData.Folder;
 import de.bht.fpa.mail.s736580s791788.model.applicationLogic.ApplicationLogicIF;
 import de.bht.fpa.mail.s736580s791788.model.applicationLogic.FassadeAppLogic;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -37,6 +43,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 /**
  *
@@ -65,16 +72,22 @@ public class FXMLController implements Initializable {
     private Label receiverLabel;
     @FXML
     private TextArea textArea;
-    //apllication logic
+    @FXML
+    private Menu openAccountMenu;
+    @FXML
+    private Menu editAccountMenu;  
+    //application logic
     private final ApplicationLogicIF fassade;
     //data for table
     private final ObservableList<Email> tableData;
+    public final static int EDIT_ACCOUNT = 0;
+    public final static int CREATE_ACCOUNT = 1;
     
     public FXMLController(){
         String pathRoot = System.getProperty("user.home");
         File fileRoot = new File(pathRoot);
-        fassade = new FassadeAppLogic(fileRoot);
-        tableData = FXCollections.observableArrayList();
+        this.fassade = new FassadeAppLogic(fileRoot);
+        this.tableData = FXCollections.observableArrayList();
     }
     
     @Override
@@ -100,9 +113,8 @@ public class FXMLController implements Initializable {
             handleCollapsedEvent(event)
         );
         //manage the focus of TreeItems
-        ChangeListener listener = (ChangeListener) (ObservableValue observable, Object oldValue, Object newValue) -> {
-            handleTreeItemFocus(newValue);
-        }; 
+        ChangeListener listener = (ChangeListener) (ObservableValue observable, Object oldValue, Object newValue) -> 
+            handleTreeItemFocus(newValue); 
         //addListener ensures that only one ChangeListener is assigned to tree
         if(addListener){
             tree.getSelectionModel().selectedItemProperty().addListener(listener);
@@ -117,12 +129,17 @@ public class FXMLController implements Initializable {
     //handle the expand of TreeItems
     public void handleExpandEvent(TreeModificationEvent<Component> event){
         TreeItem<Component> eventNode = event.getTreeItem();
-        eventNode.getChildren().clear();
+        Folder parent = (Folder) eventNode.getValue();
+        
+        //delete and update only if a null-TreeTtem appears
+        //-->load TreeItems only one time
+        if(eventNode.getChildren().get(0) == null){
+            eventNode.getChildren().clear();
+            fassade.loadContent(parent);
+            updateTree(eventNode, parent);
+        }
         String path = "/de/bht/fpa/mail/s736580s791788/resources/openFolder.png";
         eventNode.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(path))));
-        Folder parent = (Folder) eventNode.getValue();
-        fassade.loadContent(parent);
-        updateTree(eventNode, parent); 
     }
     
     //handle the collapse of TreeItems
@@ -141,10 +158,10 @@ public class FXMLController implements Initializable {
             fassade.loadEmails(folder);
             System.out.println("Selected directory: " + folder.getPath());
             System.out.println("Number of emails: " + folder.getEmails().size());
-            for(Email email: folder.getEmails()){
+            for(Email email : folder.getEmails()){
                 System.out.println(email);
                 tableData.add(email);
-            }  
+            }
             System.out.println();
             //congure sort of the TableView
             table.setItems(tableData);
@@ -165,20 +182,33 @@ public class FXMLController implements Initializable {
     }
     
     public void showEmailNumberInTreeView(Folder folder){
-        File file = new File(folder.getPath());
-        folder.setName(file.getName() + " (" + folder.getEmails().size() + ")");
         tree.setShowRoot(false);
         tree.setShowRoot(true);
     }
     
     public void configureMenue(){     
-        //EventHandler for all MenuItem's
-        EventHandler handler = (EventHandler<ActionEvent>) (ActionEvent event) -> handleMenuItemEvent(event);
+        for(String name: fassade.getAllAccounts()){
+            this.openAccountMenu.getItems().add(new MenuItem(name));
+            this.editAccountMenu.getItems().add(new MenuItem(name));
+        }
         
+        //recursive variant:
         for(Menu menu: menuBar.getMenus()){
-            for(MenuItem item: menu.getItems()){
-                item.setOnAction(handler);
+            addEventHandlerToAllMenuItems(menu);
+        }
+    }
+    
+    public void addEventHandlerToAllMenuItems(Menu menu){
+        //EventHandler for all MenuItem's
+        EventHandler handler = (EventHandler<ActionEvent>) (ActionEvent event) 
+                -> handleMenuItemEvent(event);
+        
+        for(MenuItem child: menu.getItems()){
+            if(child instanceof Menu){
+                addEventHandlerToAllMenuItems((Menu)child);
+                continue;
             }
+            child.setOnAction(handler);
         }
     }
     
@@ -186,24 +216,74 @@ public class FXMLController implements Initializable {
     public void handleMenuItemEvent(ActionEvent event){
         MenuItem menuItem = (MenuItem) event.getSource();
         String description = menuItem.getText();
-            
+        
         //handle choosing a new directory
         if(description.equals("Open")){
-            DirectoryChooser chooser = new DirectoryChooser();
-            File newRoot = chooser.showDialog(null);
-                
-            //if canceled skip
-            if(newRoot != null){ 
-                //manager = new FileManager(newRoot);
-                fassade.changeDirectory(newRoot);
-                createTree(false);
-            }
+            activateOpen();
+            return;
         }
         
         if(description.equals("Save")){
-            DirectoryChooser chooser = new DirectoryChooser();
-            File newDirectory = chooser.showDialog(null);
-            fassade.saveEmails(newDirectory);
+            activateSave();
+            return;
+        }
+        
+        if(description.equals("New Account")){
+            AccountViewController accContr = new AccountViewController(this, CREATE_ACCOUNT);
+            activateCreateAccount(accContr);
+            accContr.configreCreateWindow();
+            return;
+        }
+        
+        Menu parentMenu = menuItem.getParentMenu();
+        if(parentMenu.getText().equals("Open Account")){
+            fassade.openAccount(description);
+            createTree(false);
+            return;
+        }
+        
+        if(parentMenu.getText().equals("Edit Account")){
+            Account account = fassade.getAccount(description);
+            AccountViewController accContr = new AccountViewController(this, EDIT_ACCOUNT);
+            activateCreateAccount(accContr);
+            accContr.configureEditWindow(account);
+        }
+    }
+    
+    //is called by handleMenuItemEvent()
+    public void activateOpen(){
+        DirectoryChooser chooser = new DirectoryChooser();
+        File newRoot = chooser.showDialog(null);
+                
+        //if canceled skip
+        if(newRoot != null){ 
+            //manager = new FileManager(newRoot);
+            fassade.changeDirectory(newRoot);
+            createTree(false);
+        }
+    }
+    
+    //is called by handleMenuItemEvent()
+    public void activateSave(){
+        DirectoryChooser chooser = new DirectoryChooser();
+        File newDirectory = chooser.showDialog(null);
+        fassade.saveEmails(newDirectory);
+    }
+    
+    //is called by handleMenuItemEvent()
+    public void activateCreateAccount(AccountViewController accContr){
+        Stage newStage = new Stage();
+        String path = "/de/bht/fpa/mail/s736580s791788/view/FXMLAccount.fxml";
+        URL location = getClass().getResource(path);
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(location);
+        fxmlLoader.setController(accContr);
+        try {
+            Scene accountScene = new Scene(fxmlLoader.load());
+            newStage.setScene(accountScene);
+            newStage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -242,10 +322,8 @@ public class FXMLController implements Initializable {
         }
         table.setPlaceholder(new Label("No emails selected"));
         //adding ListChangeListener for TableView-Elements
-        table.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Email>) (ListChangeListener.Change<? extends Email> c) -> {
-                Object obj = table.getSelectionModel().getSelectedItem();
-                displayEmailDataOnFocus(obj);
-        });   
+        table.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Email>) 
+                (ListChangeListener.Change<? extends Email> c) -> displayEmailDataOnFocus());   
     }
     
     //comparing two dates by parsing it into the right DateFormat
@@ -262,9 +340,9 @@ public class FXMLController implements Initializable {
     }
     
     //show email-description
-    public void displayEmailDataOnFocus(Object newValue){
-        if(newValue != null){
-            Email email = (Email) newValue;
+    public void displayEmailDataOnFocus(){
+        Email email = (Email) table.getSelectionModel().getSelectedItem();
+        if(email != null){
             senderLabel.setText(email.getSender());
             subjectLabel.setText(email.getSubject());
             receivedLabel.setText(email.getReceived());
@@ -275,20 +353,40 @@ public class FXMLController implements Initializable {
     
     //transform Folder-hierarchy in TreeItem-hierarchy
     public void updateTree(TreeItem<Component> root, Component parent){
-        if(root.getChildren().isEmpty()){
-            for(Component child: parent.getComponents()){
-                TreeItem<Component> itemChild = new TreeItem<>(child);
-                itemChild.setExpanded(false);     
+        for(Component child: parent.getComponents()){
+            TreeItem<Component> itemChild = new TreeItem<>(child);
+            itemChild.setExpanded(false);     
                 
-                //assing icon to directory
-                String path = "/de/bht/fpa/mail/s736580s791788/resources/folder.png";
-                itemChild.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(path))));   
-                root.getChildren().add(itemChild);
+            //assing icon to directory
+            String path = "/de/bht/fpa/mail/s736580s791788/resources/folder.png";
+            itemChild.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(path))));   
+            root.getChildren().add(itemChild);
                 
-                if(child.isExpandable()){
-                    itemChild.getChildren().add(new TreeItem(null)); //temporary added
-                }
+            if(child.isExpandable()){
+                itemChild.getChildren().add(null); //temporary added
             }
         }
+    }
+    
+    public boolean saveAccount(Account account){        
+        boolean saved = fassade.saveAccount(account);
+        if(saved){
+            //add one different MenuItem for each Menu
+            MenuItem item1 = new MenuItem(account.getName());
+            MenuItem item2 = new MenuItem(account.getName());
+            openAccountMenu.getItems().add(item1);
+            editAccountMenu.getItems().add(item2);
+            
+            //add EventHandler
+            item1.addEventHandler(ActionEvent.ACTION, (EventHandler<ActionEvent>)
+                    (ActionEvent e) -> handleMenuItemEvent(e));
+            item2.addEventHandler(ActionEvent.ACTION, (EventHandler<ActionEvent>)
+                    (ActionEvent e) -> handleMenuItemEvent(e));
+        }
+        return saved;
+    }
+    
+    public void updateAccount(Account account){
+        fassade.updateAccount(account);
     }
 }

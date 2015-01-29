@@ -1,15 +1,18 @@
+
 package de.bht.fpa.mail.s736580s791788.model.applicationLogic;
 
-import de.bht.fpa.mail.s736580s791788.model.applicationData.Folder;
 import java.io.File;
+import java.util.List;
+import de.bht.fpa.mail.s736580s791788.model.applicationData.Folder;
+import de.bht.fpa.mail.s736580s791788.model.applicationData.Email;
+import de.bht.fpa.mail.s736580s791788.model.applicationData.Account;
 
 /**
  * This Interface defines the methods which are needed 
- * to manage emails and folders.
- * 
+ * to manage emails, folders and accounts
+ * .
  * @author Simone Strippgen
  */
-
 public interface ApplicationLogicIF {
 
     /**
@@ -27,6 +30,14 @@ public interface ApplicationLogicIF {
     void loadContent(Folder folder);
 
     /**
+     * Searches for all emails in the selected folder that contain the 
+     * given pattern.
+     * @return a list of all emails that contain the pattern
+     * @param pattern contains a string for comparison with email content
+     */
+    List<Email> search(String pattern);
+
+    /**
      * Loads all emails in the directory path of the given folder
      * as objects of the class Email into the folder.
      * @param folder    the folder into which the emails of the corresponding 
@@ -35,8 +46,8 @@ public interface ApplicationLogicIF {
     void loadEmails(Folder folder);
 
     /**
-     * Changes the root directory of the application, and initializes
-     * the folder manager with the new root directory.
+     * Changes the root directory of the application and initializes the
+     * folder manager with the new root directory.
      * @param file  the path to the directory which was selected as 
      *              the new root directory of the application.
      */
@@ -49,4 +60,40 @@ public interface ApplicationLogicIF {
      *              should be saved.
      */
     void saveEmails(File file);
+    
+    
+    // NEU in Uebung 8
+    
+    /**
+     * Sets a selected account as the new working account, and initializes
+     * the folder manager with the top Folder of the account.
+     * @param name  name of the account which should be set as
+     *              the current working account.
+     */
+    void openAccount(String name);
+
+    /**
+     * @return a list of all account names.
+     */
+    List<String> getAllAccounts();
+
+    /**
+     * @return account with the given name.
+     * If no account with this name exists, it returns null.
+     * @param name  name of the account 
+     */
+    Account getAccount(String name);
+    
+    /**
+     * Saves the given Account in the datastore.
+     * @param account  the account that should be saved
+     * @return true if an account with this name did not exist.
+     */
+    boolean saveAccount(Account account);
+    
+    /**
+     * Updates the given Account in the datastore.
+     * @param account  the account that should be updated
+     */
+    void updateAccount(Account account);
 }

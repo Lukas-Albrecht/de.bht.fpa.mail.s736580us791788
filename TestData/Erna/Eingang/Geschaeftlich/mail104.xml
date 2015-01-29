@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<email>
+    <read>true</read>
+    <received>Dienstag, 11. Juni 2013 12:55</received>
+    <receiverBCC></receiverBCC>
+    <receiverCC>s48711@beuth-hochschule.de</receiverCC>
+    <receiverTo>bhtfpa@googlemail.com</receiverTo>
+    <sender>bhtfpa@googlemail.com</sender>
+    <sent>Dienstag, 11. Juni 2013 12:55</sent>
+    <subject>Test</subject>
+    <text>Test&#xD;
+</text>
+</email>

@@ -16,5 +16,5 @@ public interface EmailManagerIF {
     
     void loadEmails(Folder f); 
     
-    void saveEmails(File file);
+    void saveEmails(File file, Folder selectedFolder);
 }

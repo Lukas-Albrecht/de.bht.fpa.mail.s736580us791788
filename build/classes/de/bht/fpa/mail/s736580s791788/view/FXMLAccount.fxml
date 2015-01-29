@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="375.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="375.0">
+         <children>
+            <VBox prefWidth="100.0">
+               <children>
+                  <Label text="Name">
+                     <VBox.margin>
+                        <Insets bottom="20.0" left="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Host">
+                     <VBox.margin>
+                        <Insets left="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Username">
+                     <VBox.margin>
+                        <Insets top="22.5" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Password">
+                     <VBox.margin>
+                        <Insets top="22.5" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" top="20.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox minWidth="235.0">
+               <children>
+                  <TextField fx:id="nameText" />
+                  <TextField fx:id="hostText">
+                     <VBox.margin>
+                        <Insets top="12.5" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField fx:id="usernameText">
+                     <VBox.margin>
+                        <Insets top="12.5" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField fx:id="passwordText">
+                     <VBox.margin>
+                        <Insets top="12.5" />
+                     </VBox.margin>
+                  </TextField>
+               </children>
+               <HBox.margin>
+                  <Insets bottom="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <Label fx:id="errorLabel" alignment="CENTER" prefWidth="375.0" textFill="#eb0505">
+         <VBox.margin>
+            <Insets bottom="20.0" />
+         </VBox.margin>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="cancelButton" mnemonicParsing="false" prefWidth="100.0" text="Cancel">
+               <HBox.margin>
+                  <Insets left="82.5" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="saveButton" mnemonicParsing="false" prefWidth="100.0" text="Save">
+               <HBox.margin>
+                  <Insets left="10.0" right="82.5" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</VBox>
